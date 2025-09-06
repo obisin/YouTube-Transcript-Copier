@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>YouTube Transcript Copier Settings</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    label { display: block; margin-bottom: 10px; }
+    input[type="text"] { width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>Extension Settings</h1>
+  <label>
+    Starting message:
+    <input type="text" id="startMessage" />
+  </label>
+  <label>
+    <input type="checkbox" id="includeTimestamps" />
+    Include timestamps in transcript
+  </label>
+  <label>
+    <input type="checkbox" id="showMessage" />
+    Show confirmation message after copying
+  </label>
+  <label>
+  <input type="checkbox" id="autoCopy" />
+  Auto-copy after loading transcript (single click)
+  </label>
+  <button id="save">Save</button>
+  <script src="options.js"></script>
+</body>
+</html>
