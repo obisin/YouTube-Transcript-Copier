@@ -38,7 +38,9 @@
       color:           '#fff',
       border:          '1px solid #000',
       padding:         '4px',
-      backgroundColor: 'transparent'
+      backgroundColor: '#000',        // Changed from 'transparent'
+      fontSize:        '11.5px',        // Added for better readability
+      borderRadius:    '2px'          // Optional: matches button styling
     });
 
     container.appendChild(btn);
