@@ -1,14 +1,18 @@
 {
   "manifest_version": 3,
   "name": "YouTube Transcript Copier",
-  "version": "1.0",
+  "version": "1.5",
   "description": "Copy YouTube video title, channel, and transcript with a customizable message.",
   "permissions": [
     "storage",
     "clipboardWrite",
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "options_page": "options.html",
   "content_scripts": [
     {
