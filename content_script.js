@@ -85,21 +85,27 @@ async function waitForTranscriptLoad(maxAttempts = 10) {
 // Modified onButtonClick function
 async function onButtonClick() {
   // Safety check for chrome.storage and get settings
-  let startMessage, includeTimestamps, showMessage, autoCopy;
+  let startMessage, includeTimestamps, showMessage, autoCopy, autoRedirectToChatGPT, autoPasteInChatGPT, autoSendInChatGPT;
   if (!chrome?.storage?.sync) {
     console.warn('Chrome storage not available, using defaults');
     startMessage = 'Please summarize this video transcript in 6-10 bullet points with a paragraph at the end answering the video title and main takeaways.';
     includeTimestamps = false;
     showMessage = true;
     autoCopy = false;
+    autoRedirectToChatGPT = false;
+    autoPasteInChatGPT = false;
+    autoSendInChatGPT = false;
   } else {
     const settings = await chrome.storage.sync.get({
       startMessage: 'Please summarize this video transcript in 6-10 bullet points with a paragraph at the end answering the video title and main takeaways.',
       includeTimestamps: false,
       showMessage: true,
-      autoCopy: false
+      autoCopy: false,
+      autoRedirectToChatGPT: false,
+      autoPasteInChatGPT: false,
+      autoSendInChatGPT: false
     });
-    ({ startMessage, includeTimestamps, showMessage, autoCopy } = settings);
+    ({ startMessage, includeTimestamps, showMessage, autoCopy, autoRedirectToChatGPT, autoPasteInChatGPT, autoSendInChatGPT } = settings);
   }
 
   // Step 1: scrape if not buffered
@@ -169,6 +175,17 @@ ${bufferedTranscript}`;
   try {
     await navigator.clipboard.writeText(payload);
     setMessage('Transcript copied to clipboard.', showMessage);
+
+    // NEW: Send to ChatGPT if redirect is enabled
+    if (autoRedirectToChatGPT) {
+      setMessage('Opening ChatGPT...', showMessage);
+      chrome.runtime.sendMessage({
+        action: 'sendToChatGPT',
+        payload: payload,
+        autoPaste: autoPasteInChatGPT,
+        autoSend: autoSendInChatGPT
+      });
+    }
   } catch (e) {
     console.error('Clipboard error:', e);
     setMessage('Failed to copy transcript.', showMessage);
