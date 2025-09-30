@@ -6,14 +6,15 @@
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
     label { display: block; margin-bottom: 10px; }
-    input[type="text"] { width: 100%; }
+    input[type="text"], textarea { width: 100%; }
+    textarea { resize: vertical; }
   </style>
 </head>
 <body>
   <h1>Extension Settings</h1>
   <label>
     Starting message:
-    <input type="text" id="startMessage" />
+    <textarea id="startMessage" rows="5"></textarea>
   </label>
   <label>
     <input type="checkbox" id="includeTimestamps" />
@@ -26,6 +27,18 @@
   <label>
   <input type="checkbox" id="autoCopy" />
   Auto-copy after loading transcript (single click)
+  </label>
+  <label>
+  <input type="checkbox" id="autoRedirectToChatGPT" />
+  Auto-redirect to ChatGPT
+  </label>
+  <label>
+  <input type="checkbox" id="autoPasteInChatGPT" />
+  Auto-paste transcript into ChatGPT prompt
+  </label>
+  <label>
+  <input type="checkbox" id="autoSendInChatGPT" />
+  Auto-press send button in ChatGPT
   </label>
   <button id="save">Save</button>
   <script src="options.js"></script>
