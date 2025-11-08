@@ -17,6 +17,14 @@
     <textarea id="startMessage" rows="5"></textarea>
   </label>
   <label>
+    Redirect to:
+    <select id="targetService">
+      <option value="chatgpt">ChatGPT</option>
+      <option value="claude">Claude</option>
+      <option value="gemini">Gemini</option>
+    </select>
+  </label>
+  <label>
     <input type="checkbox" id="includeTimestamps" />
     Include timestamps in transcript
   </label>
@@ -29,16 +37,16 @@
   Auto-copy after loading transcript (single click)
   </label>
   <label>
-  <input type="checkbox" id="autoRedirectToChatGPT" />
-  Auto-redirect to ChatGPT
+  <input type="checkbox" id="autoRedirectToTarget" />
+  Auto-redirect to selection
   </label>
   <label>
-  <input type="checkbox" id="autoPasteInChatGPT" />
-  Auto-paste transcript into ChatGPT prompt
+  <input type="checkbox" id="autoPasteInTarget" />
+  Auto-paste transcript into prompt
   </label>
   <label>
-  <input type="checkbox" id="autoSendInChatGPT" />
-  Auto-press send button in ChatGPT
+  <input type="checkbox" id="autoSendInTarget" />
+  Auto-press send button
   </label>
   <button id="save">Save</button>
   <script src="options.js"></script>

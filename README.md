@@ -1,117 +1,81 @@
 # YouTube Transcript Copier
 
-A simple Chrome extension that automatically extracts YouTube video transcripts and copies them to your clipboard with customizable formatting for AI analysis.
+A powerful Chrome extension to extract YouTube video transcripts with a multi-layered approach, format them, and optionally redirect to ChatGPT, Claude, or Gemini for analysis — with auto‑paste and auto‑send if desired.
 
-## Features
+![Demonstration GIF](https://via.placeholder.com/800x400.png?text=Extension+Demonstration+GIF)
 
-- **Auto-open transcripts**: Automatically opens YouTube's transcript panel if not already visible
-- **One-click or two-click operation**: Configurable auto-copy or manual confirmation
-- **ChatGPT integration**: Automatically redirect to ChatGPT, paste transcript, and send
-- **Timestamp inclusion**: Optional timestamps in transcript output
-- **Customizable prompt**: Set your own starting message for AI analysis (multi-line support)
-- **Clean formatting**: Formats output with video title and transcript for easy AI processing
+## Key Features
+
+- **Robust Transcript Extraction**: The extension uses a sophisticated multi-step process to ensure it can always get a transcript if one is available:
+    1.  **UI Scraping**: It first tries to get the transcript by automating the YouTube interface, just like a user would.
+    2.  **Caption Track Fallback**: If the UI method fails, it intelligently fetches the raw caption tracks from YouTube's internal data (`ytInitialPlayerResponse`) or by directly calling the `timedtext` API.
+    3.  **Network Capture**: As a final resort, it can even capture the transcript URL directly from the network requests made by the YouTube player.
+- **Clipboard‑first**:
+    - The transcript (with your starting message and video title) is always copied to your clipboard. You can paste it anywhere — Docs, Notes, Notion, Slack, etc.
+- **Seamless Redirect (ChatGPT/Claude/Gemini)**:
+    -   **Auto-Redirect**: Automatically opens your selected destination after copying the transcript.
+    -   **Auto-Paste**: Pastes the formatted transcript into the destination prompt.
+    -   **Auto-Send**: Clicks the send button for you.
+- **Highly Customizable**:
+    -   **Custom Prompt**: Define your own starting message to guide the AI's analysis.
+    -   **Timestamp Control**: Optionally include or exclude timestamps in the output.
+    -   **Flexible Automation**: Enable or disable any of the automation features (auto-copy, auto-redirect, auto-paste, auto-send) to fit your workflow.
+- **Clean Output Format**: The copied text is neatly formatted with your custom message, the video title, and the full transcript, ready for immediate use.
 
 ## Installation
 
-1. Download or clone this repository
-2. Open Chrome and navigate to `chrome://extensions/`
-3. Enable "Developer mode" in the top right
-4. Click "Load unpacked" and select the extension folder
-5. Navigate to any YouTube video to see the red "Copy Transcript" button
+1.  Download or clone this repository.
+2.  Open Chrome and navigate to `chrome://extensions/`.
+3.  Enable "Developer mode" in the top right.
+4.  Click "Load unpacked" and select the extension folder.
+5.  Navigate to any YouTube video to see the red "Copy Transcript" button.
 
 ## Usage
 
-### Basic Operation
-1. Go to any YouTube video
-2. Click the red "Copy Transcript" button that appears in the top-right
-3. The extension will automatically open the transcript panel if needed
-4. Depending on your settings, it will either auto-copy or require a second click
+1.  Go to any YouTube video.
+2.  Click the red "Copy Transcript" button that appears in the top-right.
+3.  The extension will automatically find and load the transcript.
+4.  The transcript is copied to your clipboard. Depending on your options, it may also auto‑redirect to ChatGPT/Claude/Gemini, auto‑paste into the prompt, and auto‑send.
 
-### Settings
-Access settings by right-clicking the extension icon and selecting "Options":
+Tip: If you prefer manual control, leave auto‑redirect/paste/send off. Just paste the clipboard contents wherever you want.
 
-- **Starting message**: Customize the prompt that precedes your transcript (multi-line textarea, default optimized for AI summarization)
-- **Include timestamps**: Add `[timestamp]` markers to each transcript segment
-- **Show confirmation messages**: Display status messages below the button
-- **Auto-copy**: Enable single-click operation (copies immediately after loading transcript)
-- **Auto-redirect to ChatGPT**: Automatically navigate to ChatGPT after copying transcript
-- **Auto-paste transcript into ChatGPT prompt**: Automatically paste the transcript into ChatGPT's input box
-- **Auto-press send button in ChatGPT**: Automatically submit the transcript to ChatGPT
+## Customization Options
 
-## Output Format
+You can customize the extension's behavior by right-clicking the extension icon and selecting "Options":
 
-The extension copies text in this format:
-
-```
-[Your custom starting message]
-Title: [Video Title]
-Transcript:
-[Transcript content with optional timestamps]
-```
-
-Default starting message is optimized for AI analysis requesting bullet point summaries and takeaways.
+-   **Starting message**: A custom message to be included with the transcript.
+-   **Redirect to**: Choose ChatGPT, Claude, or Gemini for optional redirect.
+-   **Include timestamps**: Add timestamps to each line of the transcript.
+-   **Show confirmation messages**: Display a confirmation message after copying the transcript.
+-   **Auto-copy**: Automatically copy the transcript after it's loaded (enables one‑click operation).
+-   **Auto-redirect to selection**: Automatically redirect after copying.
+-   **Auto-paste transcript into prompt**: Automatically paste into the destination prompt.
+-   **Auto-press send button**: Automatically press the send button.
 
 ## Technical Details
 
-- **Manifest Version**: 3
-- **Permissions**: storage, clipboardWrite, activeTab, scripting, tabs
-- **Target**: YouTube watch pages (`*://*.youtube.com/watch*`)
-- **Auto-injection**: Button persists through YouTube's SPA navigation
-- **Background service worker**: Handles ChatGPT tab navigation and interaction
+-   **Manifest Version**: 3
+-   **Core Logic (`content_script.js`)**: Injected into YouTube watch pages to handle button creation, UI interaction, and the multi-layered transcript extraction process.
+-   **Service Worker (`background.js`)**: Manages redirect/paste/send for ChatGPT, Claude, and Gemini.
+-   **Permissions**: `storage` (for settings), `clipboardWrite`, `activeTab`, `scripting`, and `tabs`.
+-   **Host Permissions**: `*://*.youtube.com/*`, `https://chatgpt.com/*`, `https://claude.ai/*`, `https://gemini.google.com/*`.
 
 ## Troubleshooting
 
-### "Chrome storage not available" error
-This warning appears briefly during extension loading but doesn't affect functionality. The extension falls back to default settings.
+-   **"Chrome storage not available" error**: This warning may appear briefly during extension loading but doesn't affect functionality. The extension will use default settings.
+-   **Transcript button not found**: If the extension fails to open the transcript, manually click YouTube's "Show transcript" button first, then use the extension.
+-   **Page scrolling after auto-open**: This is normal behavior as the extension opens YouTube's description panel to access the transcript button.
+-   **Auto-send not working**: Make sure all three checkboxes are enabled: auto-redirect, auto-paste, and auto-press send.
+-   **Auto-paste fails or you’re not signed in**: Your transcript is already on the clipboard — just click the prompt box and press `Ctrl/Cmd+V`.
 
-### Transcript button not found
-If auto-opening fails, manually click YouTube's "Show transcript" button first, then use the extension.
+## Privacy
 
-### Page scrolling after auto-open
-This is normal behaviour when the extension opens YouTube's description panel to access the transcript button.
-
-### ChatGPT auto-send not working
-Make sure all three checkboxes are enabled: auto-redirect, auto-paste, and auto-press send. The send button requires the paste to complete first.
-
-## File Structure
-
-```
-├── manifest.json          # Extension configuration
-├── content_script.js      # Main extension logic (YouTube page interaction)
-├── background.js          # Service worker (ChatGPT integration)
-├── options.html           # Settings page interface
-├── options.js             # Settings page functionality
-└── README.md              # This file
-```
-
-## Development
-
-The extension uses:
-- **Content script injection** for YouTube page interaction
-- **Background service worker** for ChatGPT tab management and DOM manipulation
-- **Chrome Storage API** for settings persistence
-- **Chrome Tabs API** for cross-page navigation
-- **Chrome Scripting API** for injecting code into ChatGPT page
-- **Mutation observers** for SPA navigation compatibility
-- **Async/await patterns** for transcript loading and page interactions
-
-## License
-
-Open source - feel free to modify and redistribute.
+This extension runs entirely in your browser. It does not collect or store any of your data. All settings are stored locally on your computer. The extension interacts with YouTube and (optionally) ChatGPT/Claude/Gemini to provide its functionality.
 
 ## Contributing
 
-Issues and pull requests welcome. When reporting bugs, include:
-- Chrome version
-- Extension version
-- YouTube video URL (if relevant)
-- Console error messages
----
+Contributions are welcome! If you find a bug or have a feature request, please open an issue.
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G61M09C8)
+## License
 
-
-<a href="https://buymeacoffee.com/obisin">
-  <img width="110" height="31" alt="bmc-button" src="https://github.com/user-attachments/assets/a927697f-dabd-46ba-88ac-5b926a5e5a16" />
-</a>
-
+This project is open source and available under the MIT License.
