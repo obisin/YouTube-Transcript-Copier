@@ -68,6 +68,11 @@ async function handleSendToTarget(payload, autoPaste, autoSend, targetService) {
     await waitForTabLoad(currentTab.id);
 
     if (autoPaste || autoSend) {
+      const granted = await ensurePermissionForService(service);
+      if (!granted) {
+        // Permission not granted; skip injection but allow navigation.
+        return;
+      }
       if (service === 'claude') {
         await chrome.scripting.executeScript({
           target: { tabId: currentTab.id },
@@ -91,6 +96,32 @@ async function handleSendToTarget(payload, autoPaste, autoSend, targetService) {
   } catch (error) {
     console.error('Error sending to target:', error);
     throw error;
+  }
+}
+
+function mapServiceToOrigin(service) {
+  switch (service) {
+    case 'claude':
+      return 'https://claude.ai/*';
+    case 'gemini':
+      return 'https://gemini.google.com/*';
+    default:
+      // chatgpt default
+      return 'https://chatgpt.com/*';
+  }
+}
+
+async function ensurePermissionForService(service) {
+  const origin = mapServiceToOrigin(service);
+  try {
+    const has = await chrome.permissions.contains({ origins: [origin] });
+    if (has) return true;
+    // Request at runtime; should be called following a user gesture from content script
+    const granted = await chrome.permissions.request({ origins: [origin] });
+    return !!granted;
+  } catch (e) {
+    console.warn('permissions request/contains failed:', e);
+    return false;
   }
 }
 

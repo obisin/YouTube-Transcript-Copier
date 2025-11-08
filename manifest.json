@@ -6,7 +6,6 @@
   "permissions": [
     "storage",
     "clipboardWrite",
-    "activeTab",
     "scripting",
     "tabs"
   ],
@@ -24,7 +23,9 @@
     }
   },
   "host_permissions": [
-    "*://*.youtube.com/*",
+    "https://www.youtube.com/*"
+  ],
+  "optional_host_permissions": [
     "https://chatgpt.com/*",
     "https://chat.openai.com/*",
     "https://claude.ai/*",
@@ -36,7 +37,7 @@
   "options_page": "options.html",
   "content_scripts": [
     {
-      "matches": ["*://*.youtube.com/watch*"],
+      "matches": ["https://www.youtube.com/watch*"],
       "js": ["content_script.js"]
     }
   ]
